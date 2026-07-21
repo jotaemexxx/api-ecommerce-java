@@ -51,12 +51,12 @@ public class Product {
         this.name = name;
     }
 
-    public double getPrice()
+    public Double getPrice()
     {
         return price;
     }
 
-    public void setPrice()
+    public void setPrice(Double price)
     {
         this.price = price;
     }
@@ -66,7 +66,7 @@ public class Product {
         return stockQuantity;
     }
 
-    public void setStockQuantity()
+    public void setStockQuantity(Integer stockQuantity)
     {
         this.stockQuantity = stockQuantity;
     }
