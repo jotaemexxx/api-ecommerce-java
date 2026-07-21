@@ -1,12 +1,13 @@
 package com.ecommerce.api.controller;
 
-import com.ecommerce.api.service.UserService;
+import com.ecommerce.api.dto.UserRequestDto;
+import com.ecommerce.api.dto.UserResponseDto;
 import com.ecommerce.api.model.User;
-import com.ecommerce.api.repository.UserRepository;
-import jakarta.validation.Valid;
+import com.ecommerce.api.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,8 +22,36 @@ public class UserController {
         this.userService = userService;
     }
 
-    public ResponseEntity<List<User>> getALlUsers() {
-        List<User>
+    @GetMapping
+    public ResponseEntity<List<UserResponseDto>> getALlUsers() {
+        List<UserResponseDto> response = userService.getAllUsers().stream().map(this::toResponseDto).collect(Collectors.toList());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
+
+        User user = userService.getUserById(id);
+
+        return ResponseEntity.ok(toResponseDto(user));
+    }
+
+    @PostMapping
+    public ResponseEntity<UserResponseDto> createUser(@Valid @RequestBody UserRequestDto dto) {
+
+        User user = toEntity(dto);
+        User savedUser = userService.createUser(user);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(toResponseDto(savedUser));
+    }
+
+    private User toEntity(UserRequestDto dto) {
+        return new User(dto.getName(), dto.getEmail(), dto.getNumber(), dto.getPassword());
+    }
+
+    private UserResponseDto toResponseDto(User user) {
+        return new UserResponseDto(user.getId(), user.getName(), user.getNumber(), user.getEmail());
     }
 
 }
