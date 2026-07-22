@@ -1,5 +1,6 @@
 package com.ecommerce.api.service;
 
+import com.ecommerce.api.model.Product;
 import com.ecommerce.api.repository.UserRepository;
 import com.ecommerce.api.model.User;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,28 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
     }
 
+    public User updateUser(Long id, User updatedUser) {
+        User existingUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario nao encontrado com id" + id));
+
+        existingUser.setName(updatedUser.getName());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setNumber(updatedUser.getNumber());
+        existingUser.setPassword(updatedUser.getPassword());
+
+        return userRepository.save(existingUser);
+
+    }
+
     public User createUser(User user) {
         return userRepository.save(user);
+    }
+
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("usuario nao encontrado: " + id);
+
+        }
+        userRepository.deleteById(id);
     }
 
 }

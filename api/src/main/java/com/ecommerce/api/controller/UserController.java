@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -44,6 +44,20 @@ public class UserController {
         User savedUser = userService.createUser(user);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponseDto(savedUser));
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserRequestDto requestDto) {
+        User userToUpdate = toEntity(requestDto);
+        User updatedUser = userService.updateUser(id, userToUpdate);
+        return ResponseEntity.ok(toResponseDto(updatedUser));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+
+        return ResponseEntity.noContent().build();
     }
 
     private User toEntity(UserRequestDto dto) {

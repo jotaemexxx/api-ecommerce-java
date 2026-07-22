@@ -46,6 +46,21 @@ public class ProductController
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequestDto requestDto) {
+        Product productToUpdate = toEntity(requestDto);
+        Product updatedProduct = productService.updateProduct(id, productToUpdate);
+        return ResponseEntity.ok(toResponseDto(updatedProduct));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+
+        productService.deleteProduct(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
     private Product toEntity(ProductRequestDto dto) {
         return new Product(dto.getName(), dto.getPrice(), dto.getStockQuantity());
     }
