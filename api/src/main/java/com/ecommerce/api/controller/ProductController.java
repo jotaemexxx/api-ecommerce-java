@@ -40,11 +40,13 @@ public class ProductController
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product)
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductRequestDto requestDto)
     {
+        Product product = toEntity(requestDto);
         Product savedProduct = productService.createProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
     }
+
 
     @PutMapping("{id}")
     public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequestDto requestDto) {

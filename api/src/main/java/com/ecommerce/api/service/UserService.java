@@ -1,8 +1,9 @@
 package com.ecommerce.api.service;
 
-import com.ecommerce.api.model.Product;
+import com.ecommerce.api.exception.ResourceNotFoundException;
 import com.ecommerce.api.repository.UserRepository;
 import com.ecommerce.api.model.User;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,11 +22,11 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado com id " + id));
     }
 
     public User updateUser(Long id, User updatedUser) {
-        User existingUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario nao encontrado com id" + id));
+        User existingUser = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado com id " + id));
 
         existingUser.setName(updatedUser.getName());
         existingUser.setEmail(updatedUser.getEmail());
@@ -42,7 +43,7 @@ public class UserService {
 
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new RuntimeException("usuario nao encontrado: " + id);
+            throw new ResourceNotFoundException("usuario nao encontrado com id " + id);
 
         }
         userRepository.deleteById(id);

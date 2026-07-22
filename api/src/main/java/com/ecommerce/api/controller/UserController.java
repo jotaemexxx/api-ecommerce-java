@@ -42,12 +42,11 @@ public class UserController {
 
         User user = toEntity(dto);
         User savedUser = userService.createUser(user);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponseDto(savedUser));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserRequestDto requestDto) {
+    public ResponseEntity<UserResponseDto> updateUser(@Valid @PathVariable Long id, @Valid @RequestBody UserRequestDto requestDto) {
         User userToUpdate = toEntity(requestDto);
         User updatedUser = userService.updateUser(id, userToUpdate);
         return ResponseEntity.ok(toResponseDto(updatedUser));
