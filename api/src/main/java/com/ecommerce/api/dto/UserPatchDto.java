@@ -1,30 +1,20 @@
 package com.ecommerce.api.dto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 
-public class UserRequestDto {
+public class UserPatchDto {
 
-    @NotBlank(message = "o nome não pode estar em branco")
     private String name;
-
-    @NotBlank(message = "o numero nao pode estar vazio")
     @Pattern(regexp = "^\\d{10,11}$", message = "o numero deve conter 10 ou 11 digitos")
     private String number;
 
-    @NotBlank(message = "o email nao pode estar vazio")
-    @Email(message = "o email deve ter um formato válido")
+    @Email(message = "o email deve ter um formarto válido")
     private String email;
 
-    @NotNull(message = "a senha nao pode ser nula")
-    @NotBlank(message = "a senha nao pode estar em branco")
     private String password;
 
-    public UserRequestDto(){}
-
-    public String getName() {
+    public String getName(){
         return name;
     }
 
@@ -55,7 +45,4 @@ public class UserRequestDto {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }
-
-

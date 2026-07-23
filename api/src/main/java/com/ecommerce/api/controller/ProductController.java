@@ -1,5 +1,6 @@
 package com.ecommerce.api.controller;
 
+import com.ecommerce.api.dto.ProductPatchDto;
 import com.ecommerce.api.dto.ProductRequestDto;
 import com.ecommerce.api.dto.ProductResponseDto;
 import com.ecommerce.api.model.Product;
@@ -53,6 +54,12 @@ public class ProductController
         Product productToUpdate = toEntity(requestDto);
         Product updatedProduct = productService.updateProduct(id, productToUpdate);
         return ResponseEntity.ok(toResponseDto(updatedProduct));
+    }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<ProductResponseDto> parcialUpdateProduct(@PathVariable Long id, @Valid @RequestBody ProductPatchDto productPatchDto) {
+        Product productToUpdate = productService.partialUpdateProduct(id, productPatchDto);
+        return ResponseEntity.ok(toResponseDto(productToUpdate));
     }
 
     @DeleteMapping("{id}")

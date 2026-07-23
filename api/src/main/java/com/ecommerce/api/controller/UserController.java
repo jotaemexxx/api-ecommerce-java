@@ -1,5 +1,6 @@
 package com.ecommerce.api.controller;
 
+import com.ecommerce.api.dto.UserPatchDto;
 import com.ecommerce.api.dto.UserRequestDto;
 import com.ecommerce.api.dto.UserResponseDto;
 import com.ecommerce.api.model.User;
@@ -50,6 +51,13 @@ public class UserController {
         User userToUpdate = toEntity(requestDto);
         User updatedUser = userService.updateUser(id, userToUpdate);
         return ResponseEntity.ok(toResponseDto(updatedUser));
+    }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<UserResponseDto> partialUpdateUser(@PathVariable Long id, @Valid @RequestBody UserPatchDto patchDto) {
+        User upatedUser = userService.partialUpdateUser(id, patchDto);
+        return ResponseEntity.ok(toResponseDto(upatedUser));
+
     }
 
     @DeleteMapping("{id}")

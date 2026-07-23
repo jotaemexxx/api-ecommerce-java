@@ -1,5 +1,6 @@
 package com.ecommerce.api.dto;
 
+
 public class UserResponseDto {
 
     private Long id;
@@ -15,7 +16,6 @@ public class UserResponseDto {
         this.name = name;
         this.number = number;
         this.email = email;
-
 
     }
 
