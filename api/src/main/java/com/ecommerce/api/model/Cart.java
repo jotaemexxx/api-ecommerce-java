@@ -1,9 +1,6 @@
 package com.ecommerce.api.model;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import org.hibernate.mapping.Value;
-
 import java.util.List;
 
 @Entity
@@ -14,16 +11,18 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> itensCart;
 
     public Cart() {
 
     }
 
-    public Cart(Long id, User user, List<CartItem> itensCart){
-        this.id = id;
+    public Cart(User user, List<CartItem> itensCart){
         this.user = user;
         this.itensCart = itensCart;
 

@@ -1,7 +1,6 @@
 package com.ecommerce.api.service;
 
 import com.ecommerce.api.exception.ResourceNotFoundException;
-import com.ecommerce.api.model.Product;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

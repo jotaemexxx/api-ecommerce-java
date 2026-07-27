@@ -2,12 +2,16 @@ package com.ecommerce.api.service;
 
 import com.ecommerce.api.dto.UserPatchDto;
 import com.ecommerce.api.exception.ResourceNotFoundException;
+import com.ecommerce.api.model.Cart;
+import com.ecommerce.api.repository.CartRepository;
 import com.ecommerce.api.repository.UserRepository;
 import com.ecommerce.api.model.User;
 import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,10 +19,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CartRepository cartRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, CartRepository cartRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.cartRepository = cartRepository;
     }
 
     public List<User> getAllUsers() {
@@ -62,10 +68,16 @@ public class UserService {
         return userRepository.save(existingUser);
     }
 
+    @Transactional
     public User createUser(User user) {
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        Cart cart =  new Cart(savedUser, new ArrayList<>());
+        cartRepository.save(cart);
+        return savedUser;
+
     }
 
     public void deleteUser(Long id) {
