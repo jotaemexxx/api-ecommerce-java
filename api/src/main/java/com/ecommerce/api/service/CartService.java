@@ -1,5 +1,7 @@
 package com.ecommerce.api.service;
 
+import com.ecommerce.api.dto.CartItemResponseDto;
+import com.ecommerce.api.dto.CartResponseDto;
 import com.ecommerce.api.exception.InsufficientStockException;
 import com.ecommerce.api.exception.RemoveInvalidCartItemException;
 import com.ecommerce.api.exception.ResourceNotFoundException;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.ecommerce.api.model.User;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,8 +36,15 @@ public class CartService {
 
     }
 
-    public Cart getCartByUserId(Long userId) {
-         return cartRepository.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("carrinho nao encontrado"));
+    public CartResponseDto getCartResponseByUserId(Long userId) {
+        Cart cart = cartRepository.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("carrinho nao encontrado"));
+
+        List<CartItemResponseDto> cartItems = cart.getItensCart().stream().map(item -> new CartItemResponseDto(item.getProduct().getId(), item.getProduct().getName(), item.getQuantity(),
+                item.getPrice(), item.calculateSubtotal())).toList();
+
+        Double total = cartItems.stream().mapToDouble(CartItemResponseDto::getSubtotal).sum();
+
+        return new CartResponseDto(cart.getId(), cart.getUser().getId(), cartItems, total);
     }
 
     @Transactional
@@ -51,11 +61,15 @@ public class CartService {
                 })
                 .orElseGet(() -> new CartItem(cart, productExisting, quantity));
 
+        if (cartItem.getQuantity() > productExisting.getStockQuantity()) {
+            throw new InsufficientStockException("quantidade indisponivel");
+        }
+
         return cartItemRepository.save(cartItem);
 
     }
 
-    public void deleteProductOnCart(Long userId, Long productId) {
+    public void removeProductFromCart(Long userId, Long productId) {
         if (!userRepository.existsById(userId)) {
             throw new ResourceNotFoundException("usuario nao encontrado");
         }

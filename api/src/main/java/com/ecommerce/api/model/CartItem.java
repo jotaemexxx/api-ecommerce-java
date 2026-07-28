@@ -73,4 +73,8 @@ public class CartItem {
     public Double getPrice() {
         return price;
     }
+
+    public Double calculateSubtotal(){
+        return price * quantity;
+    }
 }
