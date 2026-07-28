@@ -16,7 +16,7 @@ public class CartItemResponseDto {
         this.productId = productId;
         this.productName = productName;
         this.quantity = quantity;
-        this.unitPrice = this.unitPrice;
+        this.unitPrice = unitPrice;
         this.subtotal = subtotal;
 
     }
