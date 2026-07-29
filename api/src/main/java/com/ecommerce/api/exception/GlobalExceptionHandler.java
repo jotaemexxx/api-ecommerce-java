@@ -46,4 +46,10 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(InvalidQuantityException.class)
+        public ResponseEntity<ErrorResponseDto> handleInvalidQuantity(InvalidQuantityException ex) {
+            ErrorResponseDto error = new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now());
+        return ResponseEntity.badRequest().body(error);
+    }
+
 }

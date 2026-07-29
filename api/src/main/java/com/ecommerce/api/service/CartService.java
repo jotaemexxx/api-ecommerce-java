@@ -3,6 +3,7 @@ package com.ecommerce.api.service;
 import com.ecommerce.api.dto.CartItemResponseDto;
 import com.ecommerce.api.dto.CartResponseDto;
 import com.ecommerce.api.exception.InsufficientStockException;
+import com.ecommerce.api.exception.InvalidQuantityException;
 import com.ecommerce.api.exception.RemoveInvalidCartItemException;
 import com.ecommerce.api.exception.ResourceNotFoundException;
 import com.ecommerce.api.model.Cart;
@@ -12,6 +13,7 @@ import com.ecommerce.api.repository.CartItemRepository;
 import com.ecommerce.api.repository.CartRepository;
 import com.ecommerce.api.repository.ProductRepository;
 import com.ecommerce.api.repository.UserRepository;
+import jakarta.validation.constraints.Positive;
 import org.springframework.stereotype.Service;
 import com.ecommerce.api.model.User;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,11 +99,51 @@ public class CartService {
                 .orElseThrow(() -> new ResourceNotFoundException("o item nao encontrado no carrinho"));
 
         if (quantity > existingProduct.getStockQuantity()) {
-            throw new InsufficientStockException("quantidade indisponivel");
+            throw new InsufficientStockException("quantidade do produto indisponivel");
         }
 
         cartItem.setQuantity(quantity);
 
+        return cartItemRepository.save(cartItem);
+    }
+
+    @Transactional
+    public CartItem itemOnCartIncrement(Long userId, Long productId, Integer increment){
+        if(!userRepository.existsById(userId)) {
+            throw new ResourceNotFoundException("usuario nao encontrado");
+        }
+
+        Product existingProduct = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("produto nao encontrado"));
+        Cart cart = cartRepository.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("carrinho nao encontrado"));
+        CartItem cartItem = cartItemRepository.findByCartAndProduct(cart, existingProduct).orElseThrow(() -> new ResourceNotFoundException("item nao encontrado no carrinho"));
+
+        int newQuantity = cartItem.getQuantity() + increment;
+
+        if(newQuantity > existingProduct.getStockQuantity()){
+            throw new InsufficientStockException("estoque de produto insuficiente para ad cionar ao carrinho");
+        }
+
+        cartItem.setQuantity(newQuantity);
+        return cartItemRepository.save(cartItem);
+    }
+
+    @Transactional
+    public CartItem itemOnCartDecrement(Long userId, Long productId, Integer decrement){
+        if(!userRepository.existsById(userId)){
+            throw new ResourceNotFoundException("usuario nao encontrado");
+        }
+
+        Product existingProduct = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("produto nao encontrado"));
+        Cart cart = cartRepository.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("o carrinho nao foi encontrado"));
+        CartItem cartItem = cartItemRepository.findByCartAndProduct(cart, existingProduct).orElseThrow(() -> new ResourceNotFoundException("item nao encontrado no carrinho"));
+
+        int newQuantity = cartItem.getQuantity() - decrement;
+
+        if(newQuantity <= 0){
+            throw new InvalidQuantityException("a quantidade minima é 1");
+        }
+
+        cartItem.setQuantity(newQuantity);
         return cartItemRepository.save(cartItem);
     }
 

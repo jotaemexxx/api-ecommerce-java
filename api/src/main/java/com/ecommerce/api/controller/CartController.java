@@ -49,7 +49,20 @@ public class CartController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{userId}/items/{productId}/increment")
+    public ResponseEntity<CartItemResponseDto> incrementProductFromCart(@PathVariable Long userId, @PathVariable Long productId, @Valid @RequestBody UpdateQuantityDto request){
+        CartItem cartItem = cartService.itemOnCartIncrement(userId, productId, request.getQuantity());
+        return ResponseEntity.status(HttpStatus.OK).body(toCartItemResponseDto(cartItem));
+    }
+
+    @PatchMapping("/{userId}/items/{productId}/decrement")
+    public ResponseEntity<CartItemResponseDto> decrementProductFromCart(@PathVariable Long userId, @PathVariable Long productId, @Valid @RequestBody UpdateQuantityDto request){
+        CartItem cartItem = cartService.itemOnCartDecrement(userId, productId, request.getQuantity());
+        return ResponseEntity.status(HttpStatus.OK).body(toCartItemResponseDto(cartItem));
+    }
+
     private CartItemResponseDto toCartItemResponseDto(CartItem cartItem){
         return new CartItemResponseDto(cartItem.getProduct().getId(), cartItem.getProduct().getName(), cartItem.getQuantity(), cartItem.getPrice(), cartItem.calculateSubtotal());
     }
+
 }
