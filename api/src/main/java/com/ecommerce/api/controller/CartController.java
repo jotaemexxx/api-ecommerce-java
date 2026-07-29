@@ -3,6 +3,7 @@ package com.ecommerce.api.controller;
 import com.ecommerce.api.dto.AddItemRequestDto;
 import com.ecommerce.api.dto.CartItemResponseDto;
 import com.ecommerce.api.dto.CartResponseDto;
+import com.ecommerce.api.dto.UpdateQuantityDto;
 import com.ecommerce.api.model.CartItem;
 import com.ecommerce.api.service.CartService;
 import jakarta.validation.Valid;
@@ -33,6 +34,19 @@ public class CartController {
         CartItem cartItem = cartService.addProductToCart(userId, requestProductToAdd.getProductId(), requestProductToAdd.getQuantity());
         return ResponseEntity.status(HttpStatus.CREATED).body(toCartItemResponseDto(cartItem));
 
+    }
+
+    @PutMapping("/{userId}/items/{productId}")
+    public ResponseEntity<CartItemResponseDto> updateProductQuantityOnCart(@PathVariable Long userId, @PathVariable Long productId, @Valid @RequestBody UpdateQuantityDto requestProductToUpdate) {
+        CartItem cartItem = cartService.updateItemQuantity(userId, productId, requestProductToUpdate.getQuantity());
+        return ResponseEntity.status(HttpStatus.OK).body(toCartItemResponseDto(cartItem));
+
+    }
+
+    @DeleteMapping("/{userId}/items/{productId}")
+    public ResponseEntity<Void> removeProductFromCart(@PathVariable Long userId, @PathVariable Long productId){
+        cartService.removeProductFromCart(userId, productId);
+        return ResponseEntity.noContent().build();
     }
 
     private CartItemResponseDto toCartItemResponseDto(CartItem cartItem){
