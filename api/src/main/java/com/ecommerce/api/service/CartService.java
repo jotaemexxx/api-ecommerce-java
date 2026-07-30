@@ -13,7 +13,6 @@ import com.ecommerce.api.repository.CartItemRepository;
 import com.ecommerce.api.repository.CartRepository;
 import com.ecommerce.api.repository.ProductRepository;
 import com.ecommerce.api.repository.UserRepository;
-import jakarta.validation.constraints.Positive;
 import org.springframework.stereotype.Service;
 import com.ecommerce.api.model.User;
 import org.springframework.transaction.annotation.Transactional;
@@ -120,7 +119,7 @@ public class CartService {
         int newQuantity = cartItem.getQuantity() + increment;
 
         if(newQuantity > existingProduct.getStockQuantity()){
-            throw new InsufficientStockException("estoque de produto insuficiente para ad cionar ao carrinho");
+            throw new InsufficientStockException("estoque de produto insuficiente para adicionar ao carrinho");
         }
 
         cartItem.setQuantity(newQuantity);
