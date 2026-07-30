@@ -134,9 +134,9 @@ class CartServiceTest  {
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
         when(cartRepository.findByUserId(1L)).thenReturn(Optional.of(cart));
         when(cartItemRepository.findByCartAndProduct(cart,product)).thenReturn(Optional.of(cartItem));
-        cartItem.setQuantity(10);
+        when(cartItemRepository.save(any(CartItem.class))).thenReturn(cartItem);
 
-        CartItem resultado = cartService.updateItemQuantity(1L,1L, cartItem.getQuantity());
+        CartItem resultado = cartService.updateItemQuantity(1L,1L, 10);
 
         assertEquals(10, cartItem.getQuantity());
 
