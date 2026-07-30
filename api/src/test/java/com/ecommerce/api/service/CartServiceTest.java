@@ -3,6 +3,8 @@ package com.ecommerce.api.service;
 import com.ecommerce.api.dto.CartItemResponseDto;
 import com.ecommerce.api.dto.CartResponseDto;
 import com.ecommerce.api.exception.InsufficientStockException;
+import com.ecommerce.api.exception.InvalidQuantityException;
+import com.ecommerce.api.exception.RemoveInvalidCartItemException;
 import com.ecommerce.api.exception.ResourceNotFoundException;
 import com.ecommerce.api.model.Cart;
 import com.ecommerce.api.model.CartItem;
@@ -24,6 +26,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -138,10 +141,148 @@ class CartServiceTest  {
 
         CartItem resultado = cartService.updateItemQuantity(1L,1L, 10);
 
-        assertEquals(10, cartItem.getQuantity());
+        assertEquals(10, resultado.getQuantity());
 
     }
 
+    @Test
+    void deveInvalidarAtualizacaoDeQuantidadeDoProdutoNoCarrinho() {
+        Product product = new Product("escova de dente", 15.35, 75);
+        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        user.setId(1L);
+        product.setId(1L);
+
+        Cart cart = new Cart(user, new ArrayList<>());
+        CartItem cartItem = new CartItem(cart, product, 5);
+
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+        when(cartRepository.findByUserId(1L)).thenReturn(Optional.of(cart));
+        when(cartItemRepository.findByCartAndProduct(cart, product)).thenReturn(Optional.of(cartItem));
+
+        assertThrows(InsufficientStockException.class, () -> {cartService.updateItemQuantity(1L, 1L, 80);});
+
+    }
+
+    @Test
+    void deveDeletarProdutoDoCarrinho() {
+        Product product = new Product("escova de dente", 15.35, 75);
+        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        user.setId(1L);
+        product.setId(1L);
+
+        Cart cart = new Cart(user, new ArrayList<>());
+        CartItem cartItem = new CartItem(cart, product, 5);
+
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+        when(cartRepository.findByUserId(1L)).thenReturn(Optional.of(cart));
+        when(cartItemRepository.findByCartAndProduct(cart, product)).thenReturn(Optional.of(cartItem));
+
+        cartService.removeProductFromCart(1L, 1L);
+
+        verify(cartItemRepository).delete(cartItem);
+
+    }
+
+    @Test
+    void NaoDeveDeletarProdutoDoCarrinho() {
+        Product product = new Product("escova de dente", 15.35, 75);
+        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        user.setId(1L);
+        product.setId(1L);
+
+        Cart cart = new Cart(user, new ArrayList<>());
+
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+        when(cartRepository.findByUserId(1L)).thenReturn(Optional.of(cart));
+        when(cartItemRepository.findByCartAndProduct(cart, product)).thenReturn(Optional.empty());
+
+        assertThrows(RemoveInvalidCartItemException.class, () -> {cartService.removeProductFromCart(1L, 1L);});
+    }
+
+    @Test
+    void DeveIncrementarProdutoNoCarrinho() {
+        Product product = new Product("escova de dente", 15.35, 75);
+        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        user.setId(1L);
+        product.setId(1L);
+
+        Cart cart = new Cart(user, new ArrayList<>());
+        CartItem cartItem = new CartItem(cart, product, 5);
+
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+        when(cartRepository.findByUserId(1L)).thenReturn(Optional.of(cart));
+        when(cartItemRepository.findByCartAndProduct(cart,product)).thenReturn(Optional.of(cartItem));
+        when(cartItemRepository.save(any(CartItem.class))).thenReturn(cartItem);
+
+        CartItem resultado = cartService.itemOnCartIncrement(1L,1L, 10);
+
+        assertEquals(15, resultado.getQuantity());
+
+    }
+
+    @Test
+    void NaoDeveIncrementarProdutoNoCarrinho() {
+        Product product = new Product("escova de dente", 15.35, 75);
+        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        user.setId(1L);
+        product.setId(1L);
+
+        Cart cart = new Cart(user, new ArrayList<>());
+        CartItem cartItem = new CartItem(cart, product, 5);
+
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+        when(cartRepository.findByUserId(1L)).thenReturn(Optional.of(cart));
+        when(cartItemRepository.findByCartAndProduct(cart,product)).thenReturn(Optional.of(cartItem));
+
+        assertThrows(InsufficientStockException.class, () -> {cartService.itemOnCartIncrement(1L,1L, 71);});
+
+    }
+
+    @Test
+    void DeveDecrementarProdutoNoCarrinho() {
+        Product product = new Product("escova de dente", 15.35, 75);
+        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        user.setId(1L);
+        product.setId(1L);
+
+        Cart cart = new Cart(user, new ArrayList<>());
+        CartItem cartItem = new CartItem(cart, product, 10);
+
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+        when(cartRepository.findByUserId(1L)).thenReturn(Optional.of(cart));
+        when(cartItemRepository.findByCartAndProduct(cart,product)).thenReturn(Optional.of(cartItem));
+        when(cartItemRepository.save(any(CartItem.class))).thenReturn(cartItem);
+
+        CartItem resultado = cartService.itemOnCartDecrement(1L,1L,5);
+
+        assertEquals(5, resultado.getQuantity());
+
+    }
+
+    @Test
+    void NaoDeveDecrementarProdutoNoCarrinho() {
+        Product product = new Product("escova de dente", 15.35, 75);
+        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        user.setId(1L);
+        product.setId(1L);
+
+        Cart cart = new Cart(user, new ArrayList<>());
+        CartItem cartItem = new CartItem(cart, product, 5);
+
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+        when(cartRepository.findByUserId(1L)).thenReturn(Optional.of(cart));
+        when(cartItemRepository.findByCartAndProduct(cart,product)).thenReturn(Optional.of(cartItem));
+
+        assertThrows(InvalidQuantityException.class, () -> {cartService.itemOnCartDecrement(1L,1L, 71);});
+
+    }
 
 
 }
