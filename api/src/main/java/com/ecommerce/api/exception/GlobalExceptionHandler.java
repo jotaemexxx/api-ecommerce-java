@@ -33,4 +33,23 @@ public class GlobalExceptionHandler {
             return ResponseEntity.badRequest().body(reponse);
     }
 
+    @ExceptionHandler(InsufficientStockException.class)
+        public ResponseEntity<ErrorResponseDto> handleInsufficientStock(InsufficientStockException ex) {
+        ErrorResponseDto error = new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now());
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(RemoveInvalidCartItemException.class)
+        public ResponseEntity<ErrorResponseDto> handleRemoveInvalidCartItem(RemoveInvalidCartItemException ex) {
+            ErrorResponseDto error = new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now());
+        return ResponseEntity.badRequest().body(error);
+
+    }
+
+    @ExceptionHandler(InvalidQuantityException.class)
+        public ResponseEntity<ErrorResponseDto> handleInvalidQuantity(InvalidQuantityException ex) {
+            ErrorResponseDto error = new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now());
+        return ResponseEntity.badRequest().body(error);
+    }
+
 }
