@@ -52,4 +52,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(error);
     }
 
+    @ExceptionHandler(EmptyCartException.class)
+        public ResponseEntity<ErrorResponseDto> handleEmptyCart(EmptyCartException ex){
+            ErrorResponseDto error = new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now());
+            return ResponseEntity.badRequest().body(error);
+    }
+
 }
