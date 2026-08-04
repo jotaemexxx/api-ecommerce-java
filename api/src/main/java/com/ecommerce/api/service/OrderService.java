@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -96,8 +95,6 @@ public class OrderService {
 
         order = orderRepository.save(order);
 
-
-        cartItemRepository.deleteAll(cart.getItensCart());
         cart.getItensCart().clear();
 
         return order;
