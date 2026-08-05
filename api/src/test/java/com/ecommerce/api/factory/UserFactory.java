@@ -2,9 +2,9 @@ package com.ecommerce.api.factory;
 
 import com.ecommerce.api.model.User;
 
-public final class UserTestFactory {
+public final class UserFactory {
 
-    private UserTestFactory() {}
+    private UserFactory() {}
 
     public static User createUser() {
         User user = new User();

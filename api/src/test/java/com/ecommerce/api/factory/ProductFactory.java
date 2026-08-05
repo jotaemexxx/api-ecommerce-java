@@ -2,9 +2,9 @@ package com.ecommerce.api.factory;
 
 import com.ecommerce.api.model.Product;
 
-public final class ProductFactoryTest {
+public final class ProductFactory {
 
-    private ProductFactoryTest() {}
+    private ProductFactory() {}
 
     public static Product createProduct() {
         Product product = new Product();
