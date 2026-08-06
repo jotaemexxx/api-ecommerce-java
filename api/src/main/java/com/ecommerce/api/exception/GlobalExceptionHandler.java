@@ -2,6 +2,7 @@ package com.ecommerce.api.exception;
 
 import com.ecommerce.api.dto.ErrorResponseDto;
 import com.ecommerce.api.dto.ValidationErrorResponseDto;
+import org.springframework.boot.webmvc.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +16,12 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    private final DefaultErrorAttributes errorAttributes;
+
+    public GlobalExceptionHandler(DefaultErrorAttributes errorAttributes) {
+        this.errorAttributes = errorAttributes;
+    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
         public ResponseEntity<ErrorResponseDto> handleResourceNotFound(ResourceNotFoundException ex) {
@@ -49,6 +56,24 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidQuantityException.class)
         public ResponseEntity<ErrorResponseDto> handleInvalidQuantity(InvalidQuantityException ex) {
             ErrorResponseDto error = new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now());
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(EmptyCartException.class)
+        public ResponseEntity<ErrorResponseDto> handleEmptyCart(EmptyCartException ex){
+            ErrorResponseDto error = new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now());
+            return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(CancelledOrderException.class)
+        public ResponseEntity<ErrorResponseDto> handleCancelledOrder(CancelledOrderException ex) {
+        ErrorResponseDto error = new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now());
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(PaidOrderException.class)
+    public ResponseEntity<ErrorResponseDto> handlePaidOrder(CancelledOrderException ex) {
+        ErrorResponseDto error = new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now());
         return ResponseEntity.badRequest().body(error);
     }
 
