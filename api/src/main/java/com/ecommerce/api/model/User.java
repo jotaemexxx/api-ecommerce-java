@@ -14,6 +14,10 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     @Column(nullable = false)
     private String email;
 
@@ -27,11 +31,12 @@ public class User {
 
     }
 
-    public User(String name, String email, String number, String password) {
+    public User(String name, Role role, String email, String number, String password) {
         this.name = name;
         this.email = email;
         this.number = number;
         this.password = password;
+        this.role = role;
 
     }
 
@@ -51,6 +56,10 @@ public class User {
         this.name = name;
 
     }
+
+    public Role getRole() { return role;}
+
+    public void setRole(Role role) { this.role = role;}
 
     public String getEmail(){
         return email;

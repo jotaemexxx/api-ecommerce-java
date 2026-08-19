@@ -3,6 +3,7 @@ package com.ecommerce.api.controller;
 import com.ecommerce.api.dto.UserPatchDto;
 import com.ecommerce.api.dto.UserRequestDto;
 import com.ecommerce.api.dto.UserResponseDto;
+import com.ecommerce.api.model.Role;
 import com.ecommerce.api.model.User;
 import com.ecommerce.api.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -68,7 +69,7 @@ public class UserController {
     }
 
     private User toEntity(UserRequestDto dto) {
-        return new User(dto.getName(), dto.getEmail(), dto.getNumber(), dto.getPassword());
+        return new User(dto.getName(), Role.USER, dto.getEmail(), dto.getNumber(), dto.getPassword());
     }
 
     private UserResponseDto toResponseDto(User user) {
