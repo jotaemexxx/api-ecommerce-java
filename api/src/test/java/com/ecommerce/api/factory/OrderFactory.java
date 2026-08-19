@@ -1,9 +1,6 @@
 package com.ecommerce.api.factory;
 
-import com.ecommerce.api.model.Order;
-import com.ecommerce.api.model.OrderItem;
-import com.ecommerce.api.model.Product;
-import com.ecommerce.api.model.User;
+import com.ecommerce.api.model.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,7 +11,7 @@ public final class OrderFactory {
     private OrderFactory() {}
 
     public static Order createOrder() {
-        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        User user = new User("joao", Role.USER, "joao@gmail.com", "6993204040", "senha123*");
         user.setId(1L);
 
         Order order = new Order();

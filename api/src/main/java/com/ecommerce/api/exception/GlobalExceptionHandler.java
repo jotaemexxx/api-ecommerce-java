@@ -82,4 +82,10 @@ public class GlobalExceptionHandler {
         ErrorResponseDto error = new ErrorResponseDto(HttpStatus.UNAUTHORIZED.value(), ex.getMessage(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
+
+    @ExceptionHandler(DeniedAcessException.class)
+    public ResponseEntity<ErrorResponseDto> handleDeniedAcess(DeniedAcessException ex) {
+        ErrorResponseDto error = new ErrorResponseDto(HttpStatus.FORBIDDEN.value(), ex.getMessage(), LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
 }

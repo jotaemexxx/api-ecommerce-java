@@ -5,10 +5,12 @@ import com.ecommerce.api.dto.CartItemResponseDto;
 import com.ecommerce.api.dto.CartResponseDto;
 import com.ecommerce.api.dto.UpdateQuantityDto;
 import com.ecommerce.api.model.CartItem;
+import com.ecommerce.api.security.UserPrincipal;
 import com.ecommerce.api.service.CartService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,42 +24,42 @@ public class CartController {
 
     public CartController(CartService cartService){ this.cartService = cartService;}
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<CartResponseDto>  getCartFromUser(@PathVariable Long userId){
-        CartResponseDto response = cartService.getCartResponseByUserId(userId);
+    @GetMapping
+    public ResponseEntity<CartResponseDto>  getCartFromUser(@AuthenticationPrincipal UserPrincipal principal){
+        CartResponseDto response = cartService.getCartResponseByUserId(principal.getId());
 
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/{userId}/items")
-    public ResponseEntity<CartItemResponseDto> addProductOnCart(@PathVariable Long userId, @Valid @RequestBody AddItemRequestDto requestProductToAdd){
-        CartItem cartItem = cartService.addProductToCart(userId, requestProductToAdd.getProductId(), requestProductToAdd.getQuantity());
+    @PostMapping("/items")
+    public ResponseEntity<CartItemResponseDto> addProductOnCart(@AuthenticationPrincipal UserPrincipal principal, @Valid @RequestBody AddItemRequestDto requestProductToAdd){
+        CartItem cartItem = cartService.addProductToCart(principal.getId(), requestProductToAdd.getProductId(), requestProductToAdd.getQuantity());
         return ResponseEntity.status(HttpStatus.CREATED).body(toCartItemResponseDto(cartItem));
 
     }
 
-    @PutMapping("/{userId}/items/{productId}")
-    public ResponseEntity<CartItemResponseDto> updateProductQuantityOnCart(@PathVariable Long userId, @PathVariable Long productId, @Valid @RequestBody UpdateQuantityDto requestProductToUpdate) {
-        CartItem cartItem = cartService.updateItemQuantity(userId, productId, requestProductToUpdate.getQuantity());
+    @PutMapping("/items/{productId}")
+    public ResponseEntity<CartItemResponseDto> updateProductQuantityOnCart(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long productId, @Valid @RequestBody UpdateQuantityDto requestProductToUpdate) {
+        CartItem cartItem = cartService.updateItemQuantity(principal.getId(), productId, requestProductToUpdate.getQuantity());
         return ResponseEntity.status(HttpStatus.OK).body(toCartItemResponseDto(cartItem));
 
     }
 
-    @DeleteMapping("/{userId}/items/{productId}")
-    public ResponseEntity<Void> removeProductFromCart(@PathVariable Long userId, @PathVariable Long productId){
-        cartService.removeProductFromCart(userId, productId);
+    @DeleteMapping("/items/{productId}")
+    public ResponseEntity<Void> removeProductFromCart(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long productId){
+        cartService.removeProductFromCart(principal.getId(), productId);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{userId}/items/{productId}/increment")
-    public ResponseEntity<CartItemResponseDto> incrementProductFromCart(@PathVariable Long userId, @PathVariable Long productId, @Valid @RequestBody UpdateQuantityDto request){
-        CartItem cartItem = cartService.itemOnCartIncrement(userId, productId, request.getQuantity());
+    @PatchMapping("/items/{productId}/increment")
+    public ResponseEntity<CartItemResponseDto> incrementProductFromCart(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long productId, @Valid @RequestBody UpdateQuantityDto request){
+        CartItem cartItem = cartService.itemOnCartIncrement(principal.getId(), productId, request.getQuantity());
         return ResponseEntity.status(HttpStatus.OK).body(toCartItemResponseDto(cartItem));
     }
 
-    @PatchMapping("/{userId}/items/{productId}/decrement")
-    public ResponseEntity<CartItemResponseDto> decrementProductFromCart(@PathVariable Long userId, @PathVariable Long productId, @Valid @RequestBody UpdateQuantityDto request){
-        CartItem cartItem = cartService.itemOnCartDecrement(userId, productId, request.getQuantity());
+    @PatchMapping("/items/{productId}/decrement")
+    public ResponseEntity<CartItemResponseDto> decrementProductFromCart(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long productId, @Valid @RequestBody UpdateQuantityDto request){
+        CartItem cartItem = cartService.itemOnCartDecrement(principal.getId(), productId, request.getQuantity());
         return ResponseEntity.status(HttpStatus.OK).body(toCartItemResponseDto(cartItem));
     }
 

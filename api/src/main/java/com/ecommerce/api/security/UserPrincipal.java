@@ -1,5 +1,6 @@
 package com.ecommerce.api.security;
 
+import com.ecommerce.api.model.Role;
 import org.springframework.security.core.GrantedAuthority;
 import com.ecommerce.api.model.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,6 +16,11 @@ public class UserPrincipal implements UserDetails {
     public UserPrincipal(User user) {
         this.user = user;
     }
+
+
+    public Long getId() { return user.getId(); }
+
+    public Role getRole() {return  user.getRole(); }
 
     @Override
     public String getUsername() {
