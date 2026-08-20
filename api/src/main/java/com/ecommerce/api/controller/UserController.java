@@ -3,10 +3,13 @@ package com.ecommerce.api.controller;
 import com.ecommerce.api.dto.UserPatchDto;
 import com.ecommerce.api.dto.UserRequestDto;
 import com.ecommerce.api.dto.UserResponseDto;
+import com.ecommerce.api.model.Role;
 import com.ecommerce.api.model.User;
+import com.ecommerce.api.security.UserPrincipal;
 import com.ecommerce.api.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
@@ -31,10 +34,8 @@ public class UserController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
-
-        User user = userService.getUserById(id);
-
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal principal) {
+        User user = userService.getUserById(id, principal.getId(), principal.getRole());
         return ResponseEntity.ok(toResponseDto(user));
     }
 
@@ -47,28 +48,36 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<UserResponseDto> updateUser(@Valid @PathVariable Long id, @Valid @RequestBody UserRequestDto requestDto) {
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserRequestDto requestDto, @AuthenticationPrincipal UserPrincipal principal) {
         User userToUpdate = toEntity(requestDto);
-        User updatedUser = userService.updateUser(id, userToUpdate);
+        User updatedUser = userService.updateUser(id, userToUpdate, principal.getId(), principal.getRole());
         return ResponseEntity.ok(toResponseDto(updatedUser));
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<UserResponseDto> partialUpdateUser(@PathVariable Long id, @Valid @RequestBody UserPatchDto patchDto) {
-        User upatedUser = userService.partialUpdateUser(id, patchDto);
+    public ResponseEntity<UserResponseDto> partialUpdateUser(@PathVariable Long id, @Valid @RequestBody UserPatchDto patchDto, @AuthenticationPrincipal UserPrincipal principal) {
+        User upatedUser = userService.partialUpdateUser(id, patchDto, principal.getId(), principal.getRole());
         return ResponseEntity.ok(toResponseDto(upatedUser));
 
     }
 
+    @PatchMapping("/{id}/promote")
+    public ResponseEntity<UserResponseDto> promoteToAdmin(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal principal) {
+        User userPromote = userService.promoteToAdmin(id, principal.getRole());
+
+        return ResponseEntity.ok(toResponseDto(userPromote));
+    }
+
+
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal principal) {
+        userService.deleteUser(id, principal.getId(), principal.getRole());
 
         return ResponseEntity.noContent().build();
     }
 
     private User toEntity(UserRequestDto dto) {
-        return new User(dto.getName(), dto.getEmail(), dto.getNumber(), dto.getPassword());
+        return new User(dto.getName(), Role.USER, dto.getEmail(), dto.getNumber(), dto.getPassword());
     }
 
     private UserResponseDto toResponseDto(User user) {

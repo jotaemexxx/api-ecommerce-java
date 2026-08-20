@@ -6,10 +6,7 @@ import com.ecommerce.api.exception.InsufficientStockException;
 import com.ecommerce.api.exception.InvalidQuantityException;
 import com.ecommerce.api.exception.RemoveInvalidCartItemException;
 import com.ecommerce.api.exception.ResourceNotFoundException;
-import com.ecommerce.api.model.Cart;
-import com.ecommerce.api.model.CartItem;
-import com.ecommerce.api.model.Product;
-import com.ecommerce.api.model.User;
+import com.ecommerce.api.model.*;
 import com.ecommerce.api.repository.CartItemRepository;
 import com.ecommerce.api.repository.CartRepository;
 import com.ecommerce.api.repository.ProductRepository;
@@ -47,7 +44,7 @@ class CartServiceTest  {
     @Test
     void deveRetonarCarrinhoPeloUserID() {
         Product product = new Product("escova de dente", 15.35, 75);
-        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        User user = new User("joao", Role.USER, "joao@gmail.com", "6993204040", "senha123*");
         user.setId(1L);
 
         Cart cart = new Cart(user, new ArrayList<>());
@@ -63,7 +60,7 @@ class CartServiceTest  {
     @Test
     void deveAdicionarProdutoNovoNoCarrinho() {
         Product product = new Product("escova de dente", 15.35, 75);
-        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        User user = new User("joao", Role.USER, "joao@gmail.com", "6993204040", "senha123*");
         user.setId(1L);
         product.setId(1L);
 
@@ -84,7 +81,7 @@ class CartServiceTest  {
     @Test
     void deveAdicionarProdutoNoCarrinhoJaExistente() {
         Product product = new Product("escova de dente", 15.35, 75);
-        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        User user = new User("joao", Role.USER, "joao@gmail.com", "6993204040", "senha123*");
         user.setId(1L);
         product.setId(1L);
 
@@ -106,7 +103,7 @@ class CartServiceTest  {
     @Test
     void deveRejeitarAdicaoDeProdutoNoCarrinhoPorEstoqueInsuficiente() {
         Product product = new Product("escova de dente", 15.35, 75);
-        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        User user = new User("joao", Role.USER, "joao@gmail.com", "6993204040", "senha123*");
         user.setId(1L);
         product.setId(1L);
 
@@ -126,7 +123,7 @@ class CartServiceTest  {
     @Test
     void deveAtualizarQuantidadeDoProdutoNoCarrinho() {
         Product product = new Product("escova de dente", 15.35, 75);
-        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        User user = new User("joao", Role.USER, "joao@gmail.com", "6993204040", "senha123*");
         user.setId(1L);
         product.setId(1L);
 
@@ -148,7 +145,7 @@ class CartServiceTest  {
     @Test
     void deveInvalidarAtualizacaoDeQuantidadeDoProdutoNoCarrinho() {
         Product product = new Product("escova de dente", 15.35, 75);
-        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        User user = new User("joao", Role.USER, "joao@gmail.com", "6993204040", "senha123*");
         user.setId(1L);
         product.setId(1L);
 
@@ -167,7 +164,7 @@ class CartServiceTest  {
     @Test
     void deveDeletarProdutoDoCarrinho() {
         Product product = new Product("escova de dente", 15.35, 75);
-        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        User user = new User("joao", Role.USER, "joao@gmail.com", "6993204040", "senha123*");
         user.setId(1L);
         product.setId(1L);
 
@@ -188,7 +185,7 @@ class CartServiceTest  {
     @Test
     void NaoDeveDeletarProdutoDoCarrinho() {
         Product product = new Product("escova de dente", 15.35, 75);
-        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        User user = new User("joao", Role.USER, "joao@gmail.com", "6993204040", "senha123*");
         user.setId(1L);
         product.setId(1L);
 
@@ -205,7 +202,7 @@ class CartServiceTest  {
     @Test
     void DeveIncrementarProdutoNoCarrinho() {
         Product product = new Product("escova de dente", 15.35, 75);
-        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        User user = new User("joao", Role.USER, "joao@gmail.com", "6993204040", "senha123*");
         user.setId(1L);
         product.setId(1L);
 
@@ -227,7 +224,7 @@ class CartServiceTest  {
     @Test
     void NaoDeveIncrementarProdutoNoCarrinho() {
         Product product = new Product("escova de dente", 15.35, 75);
-        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        User user = new User("joao", Role.USER, "joao@gmail.com", "6993204040", "senha123*");
         user.setId(1L);
         product.setId(1L);
 
@@ -246,7 +243,7 @@ class CartServiceTest  {
     @Test
     void DeveDecrementarProdutoNoCarrinho() {
         Product product = new Product("escova de dente", 15.35, 75);
-        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        User user = new User("joao", Role.USER,  "joao@gmail.com", "6993204040", "senha123*");
         user.setId(1L);
         product.setId(1L);
 
@@ -268,7 +265,7 @@ class CartServiceTest  {
     @Test
     void NaoDeveDecrementarProdutoNoCarrinho() {
         Product product = new Product("escova de dente", 15.35, 75);
-        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        User user = new User("joao", Role.USER, "joao@gmail.com", "6993204040", "senha123*");
         user.setId(1L);
         product.setId(1L);
 

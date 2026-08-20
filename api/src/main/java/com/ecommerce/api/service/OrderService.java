@@ -3,6 +3,7 @@ package com.ecommerce.api.service;
 import com.ecommerce.api.exception.*;
 import com.ecommerce.api.model.*;
 import com.ecommerce.api.repository.*;
+import com.ecommerce.api.security.UserPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +26,18 @@ public class OrderService {
 
     }
 
-    public Order getOrderById(Long orderId){
-        return orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("pedido nao encontrado"));
+    public Order getOrderById(Long orderId, Long requesterId, Role requesterRole){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("pedido nao encontrado"));
+
+        boolean isOwner = order.getUser().getId().equals(requesterId);
+        boolean isAdmin = requesterRole == Role.ADMIN;
+
+        if (!isOwner && !isAdmin) {
+            throw new DeniedAcessException("acesso negado");
+        }
+
+        return order;
     }
 
     public List<Order> getOrdersFromUser(Long userId){
@@ -101,8 +112,16 @@ public class OrderService {
     }
 
     @Transactional
-    public Order cancelOrder(Long id) {
+    public Order cancelOrder(Long id, Long requesterId, Role requesterRole) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("pedido nao encontrado"));
+
+        boolean isOwner = order.getUser().getId().equals(requesterId);
+        boolean isAdmin = requesterRole == Role.ADMIN;
+
+        if (!isOwner && !isAdmin) {
+            throw new DeniedAcessException("acesso negado");
+        }
+
 
         if(order.getOrderStatus() == Order.OrderStatus.CANCELLED){
             throw new CancelledOrderException("o pedido já foi cancelado");

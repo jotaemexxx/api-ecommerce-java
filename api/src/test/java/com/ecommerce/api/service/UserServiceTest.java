@@ -1,6 +1,7 @@
 package com.ecommerce.api.service;
 
 import com.ecommerce.api.exception.ResourceNotFoundException;
+import com.ecommerce.api.model.Role;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,8 +31,8 @@ public class UserServiceTest {
 
     @Test
     void deveRetornarListaDeUsuarios() {
-        User user1 = new User("fulano de tal", "fulano@gmail.com", "6993204040", "senhateste123*" );
-        User user2 = new User("ciclano da silva", "dasilva@gmail.com", "6998784467", "testedesenha321#");
+        User user1 = new User("fulano de tal", Role.USER, "fulano@gmail.com", "6993204040", "senhateste123*" );
+        User user2 = new User("ciclano da silva", Role.USER, "dasilva@gmail.com", "6998784467", "testedesenha321#");
 
         when(userRepository.findAll()).thenReturn(List.of(user1, user2));
 
@@ -42,7 +43,7 @@ public class UserServiceTest {
 
     @Test
     void deveRetornarUsuarioPeloId(){
-        User user1 = new User("user_teste", "usuarioteste@gmail.com", "6993204040", "user1456*&");
+        User user1 = new User("user_teste", Role.USER, "usuarioteste@gmail.com", "6993204040", "user1456*&");
         user1.setId(1L);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
@@ -62,8 +63,8 @@ public class UserServiceTest {
 
     @Test
     void deveCriarUsuario(){
-        User enterUser = new User("nome", "nome@gmail.com", "69993204040", "user123*");
-        User outUser = new User("nome", "nome@gmail.com", "69993204040", "user123*");
+        User enterUser = new User("nome", Role.USER, "nome@gmail.com", "69993204040", "user123*");
+        User outUser = new User("nome", Role.USER,  "nome@gmail.com", "69993204040", "user123*");
         outUser.setId(1L);
 
         when(passwordEncoder.encode("user123*")).thenReturn("senhaHasheada123");
@@ -77,9 +78,9 @@ public class UserServiceTest {
 
     @Test
     void deveAtualizarUsuario(){
-        User beforeUser = new User("nome", "nome@gmail.com", "69993204040", "user123*");
-        User updateUser = new User("jairo", "nome@gmail.com", "69993204040", "novaSenhaTeste");
-        User savedUser = new User("jairo", "nome@gmail.com", "69993204040", "senhaHash123");
+        User beforeUser = new User("nome", Role.USER, "nome@gmail.com", "69993204040", "user123*");
+        User updateUser = new User("jairo", Role.USER, "nome@gmail.com", "69993204040", "novaSenhaTeste");
+        User savedUser = new User("jairo", Role.USER, "nome@gmail.com", "69993204040", "senhaHash123");
         beforeUser.setId(1L);
         savedUser.setId(1L);
 

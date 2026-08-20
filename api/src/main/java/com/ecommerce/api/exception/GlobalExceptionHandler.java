@@ -72,9 +72,20 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PaidOrderException.class)
-    public ResponseEntity<ErrorResponseDto> handlePaidOrder(CancelledOrderException ex) {
+    public ResponseEntity<ErrorResponseDto> handlePaidOrder(PaidOrderException ex) {
         ErrorResponseDto error = new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now());
         return ResponseEntity.badRequest().body(error);
     }
 
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleUsernameNotFound(UsernameNotFoundException ex) {
+        ErrorResponseDto error = new ErrorResponseDto(HttpStatus.UNAUTHORIZED.value(), ex.getMessage(), LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(DeniedAcessException.class)
+    public ResponseEntity<ErrorResponseDto> handleDeniedAcess(DeniedAcessException ex) {
+        ErrorResponseDto error = new ErrorResponseDto(HttpStatus.FORBIDDEN.value(), ex.getMessage(), LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
 }

@@ -1,9 +1,6 @@
 package com.ecommerce.api.factory;
 
-import com.ecommerce.api.model.Cart;
-import com.ecommerce.api.model.CartItem;
-import com.ecommerce.api.model.Product;
-import com.ecommerce.api.model.User;
+import com.ecommerce.api.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +10,7 @@ public final class CartFactory {
     private CartFactory() {}
 
     public static Cart createCart() {
-        User user = new User("joao", "joao@gmail.com", "6993204040", "senha123*");
+        User user = new User("joao", Role.USER, "joao@gmail.com", "6993204040", "senha123*");
         user.setId(1L);
 
         Cart cart = new Cart(user, new ArrayList<>());

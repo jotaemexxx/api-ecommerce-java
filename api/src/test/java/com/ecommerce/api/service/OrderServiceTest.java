@@ -40,7 +40,7 @@ class OrderServiceTest {
 
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
-        Order resultado = orderService.getOrderById(1L);
+        Order resultado = orderService.getOrderById(1L, 1L, Role.USER);
 
         assertEquals(1L, resultado.getId());
     }
@@ -105,7 +105,7 @@ class OrderServiceTest {
     void cancelarOrdemInexistente() {
         when(orderRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> orderService.cancelOrder(1L));
+        assertThrows(ResourceNotFoundException.class, () -> orderService.cancelOrder(1L, 1L, Role.USER));
     }
 
     @Test
@@ -129,7 +129,7 @@ class OrderServiceTest {
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
         when(orderRepository.save(any(Order.class))).thenReturn(order);
 
-        Order resultado = orderService.cancelOrder(1L);
+        Order resultado = orderService.cancelOrder(1L, 1L, Role.USER);
 
         assertEquals(Order.OrderStatus.CANCELLED, resultado.getOrderStatus());
     }
@@ -141,7 +141,7 @@ class OrderServiceTest {
 
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
-        assertThrows(CancelledOrderException.class, () -> orderService.cancelOrder(1L));
+        assertThrows(CancelledOrderException.class, () -> orderService.cancelOrder(1L, 1L, Role.USER));
     }
 
     @Test
@@ -151,7 +151,7 @@ class OrderServiceTest {
 
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
-        assertThrows(PaidOrderException.class, () -> orderService.cancelOrder(1L));
+        assertThrows(PaidOrderException.class, () -> orderService.cancelOrder(1L, 1L, Role.USER));
     }
 }
 
