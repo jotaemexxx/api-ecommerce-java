@@ -1,7 +1,7 @@
 package com.ecommerce.api.service;
 
 import com.ecommerce.api.dto.UserPatchDto;
-import com.ecommerce.api.exception.DeniedAcessException;
+import com.ecommerce.api.exception.DeniedAccessException;
 import com.ecommerce.api.exception.ResourceNotFoundException;
 import com.ecommerce.api.model.Cart;
 import com.ecommerce.api.model.Role;
@@ -42,7 +42,7 @@ public class UserService {
         Boolean isAdmin = requesterRole == Role.ADMIN;
 
         if(!isOwner && !isAdmin) {
-            throw new DeniedAcessException("voce nao possui permissao");
+            throw new DeniedAccessException("voce nao possui permissao");
         }
 
         return user;
@@ -55,7 +55,7 @@ public class UserService {
         Boolean isAdmin = requesterRole == Role.ADMIN;
 
         if(!isOwner && !isAdmin) {
-            throw new DeniedAcessException("voce nao possui permissao");
+            throw new DeniedAccessException("voce nao possui permissao");
         }
 
         existingUser.setName(updatedUser.getName());
@@ -74,7 +74,7 @@ public class UserService {
         Boolean isAdmin = requesterRole == Role.ADMIN;
 
         if(!isOwner && !isAdmin) {
-            throw new DeniedAcessException("voce nao possui permissao");
+            throw new DeniedAccessException("voce nao possui permissao");
         }
 
         if(patchDto.getName() != null) {
@@ -113,7 +113,7 @@ public class UserService {
         Boolean isAdmin = requesterRole == Role.ADMIN;
 
         if(!isAdmin){
-            throw new DeniedAcessException("voce nao tem permissao para realizar essa operação");
+            throw new DeniedAccessException("voce nao tem permissao para realizar essa operação");
         }
 
         user.setRole(Role.ADMIN);
@@ -128,7 +128,7 @@ public class UserService {
         Boolean isAdmin = requesterRole == Role.ADMIN;
 
         if(!isOwner && !isAdmin) {
-            throw new DeniedAcessException("voce nao possui permissao");
+            throw new DeniedAccessException("voce nao possui permissao");
         }
         userRepository.deleteById(id);
     }

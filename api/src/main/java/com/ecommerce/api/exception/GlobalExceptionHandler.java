@@ -35,9 +35,9 @@ public class GlobalExceptionHandler {
 
             ex.getBindingResult().getFieldErrors().forEach(fieldError -> errors.put(fieldError.getField(), fieldError.getDefaultMessage()));
 
-            ValidationErrorResponseDto reponse =  new ValidationErrorResponseDto(HttpStatus.BAD_REQUEST.value(), errors, LocalDateTime.now());
+            ValidationErrorResponseDto response =  new ValidationErrorResponseDto(HttpStatus.BAD_REQUEST.value(), errors, LocalDateTime.now());
 
-            return ResponseEntity.badRequest().body(reponse);
+            return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(InsufficientStockException.class)
@@ -83,8 +83,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
-    @ExceptionHandler(DeniedAcessException.class)
-    public ResponseEntity<ErrorResponseDto> handleDeniedAcess(DeniedAcessException ex) {
+    @ExceptionHandler(DeniedAccessException.class)
+    public ResponseEntity<ErrorResponseDto> handleDeniedAccess(DeniedAccessException ex) {
         ErrorResponseDto error = new ErrorResponseDto(HttpStatus.FORBIDDEN.value(), ex.getMessage(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
