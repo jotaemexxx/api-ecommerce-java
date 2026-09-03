@@ -9,7 +9,7 @@ public class UserPatchDto {
     @Pattern(regexp = "^\\d{10,11}$", message = "o numero deve conter 10 ou 11 digitos")
     private String number;
 
-    @Email(message = "o email deve ter um formarto válido")
+    @Email(message = "o email deve ter um formato válido")
     private String email;
 
     private String password;

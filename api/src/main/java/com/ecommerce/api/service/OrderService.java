@@ -34,7 +34,7 @@ public class OrderService {
         boolean isAdmin = requesterRole == Role.ADMIN;
 
         if (!isOwner && !isAdmin) {
-            throw new DeniedAcessException("acesso negado");
+            throw new DeniedAccessException("acesso negado");
         }
 
         return order;
@@ -119,7 +119,7 @@ public class OrderService {
         boolean isAdmin = requesterRole == Role.ADMIN;
 
         if (!isOwner && !isAdmin) {
-            throw new DeniedAcessException("acesso negado");
+            throw new DeniedAccessException("acesso negado");
         }
 
 
