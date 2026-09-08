@@ -51,7 +51,7 @@ class CartServiceTest  {
         CartItem cartItem = new CartItem(cart, product, 2);
         cart.getItensCart().add(cartItem);
 
-        when(cartRepository.findByUserId(1L)).thenReturn(Optional.of(cart));
+        when(cartRepository.findByUserIdWithItems(1L)).thenReturn(Optional.of(cart));
         CartResponseDto resultado = cartService.getCartResponseByUserId(1L);
         assertEquals("escova de dente", resultado.getCartItems().get(0).getProductName());
 

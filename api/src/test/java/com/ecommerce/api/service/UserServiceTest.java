@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import com.ecommerce.api.model.User;
+import com.ecommerce.api.repository.CartRepository;
 import com.ecommerce.api.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -25,6 +26,9 @@ public class UserServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private CartRepository cartRepository;
 
     @InjectMocks
     private UserService userService;
@@ -48,7 +52,7 @@ public class UserServiceTest {
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
 
-        User resultado = userService.getUserById(1L);
+        User resultado = userService.getUserById(1L, 1L, Role.USER);
 
         assertEquals("user_teste", resultado.getName());
     }
@@ -57,7 +61,7 @@ public class UserServiceTest {
     void deveRetornarUsuarioNotFoundPeloId(){
         when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> {userService.getUserById(999L);});
+        assertThrows(ResourceNotFoundException.class, () -> {userService.getUserById(999L, 1L, Role.ADMIN);});
 
     }
 
@@ -88,7 +92,7 @@ public class UserServiceTest {
         when(passwordEncoder.encode("novaSenhaTeste")).thenReturn("senhaHash123");
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
-        User resultado = userService.updateUser(1L, updateUser);
+        User resultado = userService.updateUser(1L, updateUser, 1L, Role.USER);
 
         assertEquals("jairo", resultado.getName());
 
@@ -96,18 +100,21 @@ public class UserServiceTest {
 
     @Test
     void deveExlcuirUsuarioExistente(){
-        when(userRepository.existsById(1L)).thenReturn(true);
+        User user = new User("nome", Role.USER, "nome@gmail.com", "69993204040", "user123*");
+        user.setId(1L);
 
-        userService.deleteUser(1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        userService.deleteUser(1L, 1L, Role.USER);
 
         verify(userRepository).deleteById(1L);
     }
 
     @Test
     void naoDeveExcluirUsuarioInexistente(){
-        when(userRepository.existsById(999L)).thenReturn(false);
+        when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> userService.deleteUser(999L));
+        assertThrows(ResourceNotFoundException.class, () -> userService.deleteUser(999L, 999L, Role.ADMIN));
 
         verify(userRepository, never()).deleteById(anyLong());
 

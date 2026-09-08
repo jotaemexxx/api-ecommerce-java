@@ -61,7 +61,7 @@ class OrderServiceTest {
         Order order1 = OrderFactory.createOrder();
         Order order2 = OrderFactory.createOrder();
 
-        when(orderRepository.findAll()).thenReturn(List.of(order1, order2));
+        when(orderRepository.findAllOrdersWithItemsAndUser()).thenReturn(List.of(order1, order2));
 
         List<Order> resultado = orderService.getAllOrders();
 
@@ -75,7 +75,7 @@ class OrderServiceTest {
         CartItem cartItem = CartFactory.createCartItem(cart, product, 5);
         cart.getItensCart().add(cartItem);
 
-        when(cartRepository.findByUserId(1L)).thenReturn(Optional.of(cart));
+        when(cartRepository.findByUserIdWithItems(1L)).thenReturn(Optional.of(cart));
         when(orderRepository.save(any(Order.class))).thenReturn(OrderFactory.createOrder());
 
         Order resultado = orderService.checkout(1L);
@@ -87,7 +87,7 @@ class OrderServiceTest {
     void checkoutFalhaCarrinhoVazio() {
         Cart cart = CartFactory.createCart();
 
-        when(cartRepository.findByUserId(1L)).thenReturn(Optional.of(cart));
+        when(cartRepository.findByUserIdWithItems(1L)).thenReturn(Optional.of(cart));
 
         assertThrows(EmptyCartException.class, () -> {
             orderService.checkout(1L);
@@ -96,14 +96,14 @@ class OrderServiceTest {
 
     @Test
     void checkoutFalhaComCarrinhoInexistente() {
-        when(cartRepository.findByUserId(1L)).thenReturn(Optional.empty());
+        when(cartRepository.findByUserIdWithItems(1L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> {orderService.checkout(1L);});
     }
 
     @Test
     void cancelarOrdemInexistente() {
-        when(orderRepository.findById(1L)).thenReturn(Optional.empty());
+        when(orderRepository.findByIdWithItems(1L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> orderService.cancelOrder(1L, 1L, Role.USER));
     }
@@ -115,7 +115,7 @@ class OrderServiceTest {
         CartItem cartItem = CartFactory.createCartItem(cart, product, 51);
         cart.getItensCart().add(cartItem);
 
-        when(cartRepository.findByUserId(1L)).thenReturn(Optional.of(cart));
+        when(cartRepository.findByUserIdWithItems(1L)).thenReturn(Optional.of(cart));
 
         assertThrows(InsufficientStockException.class, () -> {
             orderService.checkout(1L);
@@ -126,7 +126,7 @@ class OrderServiceTest {
     void cancelarOrderComSucesso() {
         Order order = OrderFactory.createOrder();
 
-        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(orderRepository.findByIdWithItems(1L)).thenReturn(Optional.of(order));
         when(orderRepository.save(any(Order.class))).thenReturn(order);
 
         Order resultado = orderService.cancelOrder(1L, 1L, Role.USER);
@@ -139,7 +139,7 @@ class OrderServiceTest {
         Order order = OrderFactory.createOrder();
         order.setOrderStatus(Order.OrderStatus.CANCELLED);
 
-        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(orderRepository.findByIdWithItems(1L)).thenReturn(Optional.of(order));
 
         assertThrows(CancelledOrderException.class, () -> orderService.cancelOrder(1L, 1L, Role.USER));
     }
@@ -149,7 +149,7 @@ class OrderServiceTest {
         Order order = OrderFactory.createOrder();
         order.setOrderStatus(Order.OrderStatus.PAID);
 
-        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+        when(orderRepository.findByIdWithItems(1L)).thenReturn(Optional.of(order));
 
         assertThrows(PaidOrderException.class, () -> orderService.cancelOrder(1L, 1L, Role.USER));
     }
