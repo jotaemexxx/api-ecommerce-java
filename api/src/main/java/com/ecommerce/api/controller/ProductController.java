@@ -41,11 +41,11 @@ public class ProductController
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductRequestDto requestDto)
+    public ResponseEntity<ProductResponseDto> createProduct(@Valid @RequestBody ProductRequestDto requestDto)
     {
         Product product = toEntity(requestDto);
         Product savedProduct = productService.createProduct(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+        return ResponseEntity.status(HttpStatus.CREATED).body(toResponseDto(savedProduct));
     }
 
 

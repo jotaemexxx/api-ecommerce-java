@@ -45,13 +45,13 @@ public class OrderService {
     }
 
     public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+        return orderRepository.findAllOrdersWithItemsAndUser();
     }
 
     @Transactional
     public Order checkout(Long userId) {
 
-        Cart cart = cartRepository.findByUserId(userId)
+        Cart cart = cartRepository.findByUserIdWithItems(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("carrinho nao encontrado"));
 
         if (cart.getItensCart().isEmpty()) {
@@ -113,7 +113,7 @@ public class OrderService {
 
     @Transactional
     public Order cancelOrder(Long id, Long requesterId, Role requesterRole) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("pedido nao encontrado"));
+        Order order = orderRepository.findByIdWithItems(id).orElseThrow(() -> new ResourceNotFoundException("pedido nao encontrado"));
 
         boolean isOwner = order.getUser().getId().equals(requesterId);
         boolean isAdmin = requesterRole == Role.ADMIN;
