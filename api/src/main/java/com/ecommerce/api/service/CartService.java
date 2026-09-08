@@ -39,7 +39,7 @@ public class CartService {
 
     @Transactional(readOnly = true)
     public CartResponseDto getCartResponseByUserId(Long userId) {
-        Cart cart = cartRepository.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("carrinho nao encontrado"));
+        Cart cart = cartRepository.findByUserIdWithItems(userId).orElseThrow(() -> new ResourceNotFoundException("carrinho nao encontrado"));
 
         List<CartItemResponseDto> cartItems = cart.getItensCart().stream().map(item -> new CartItemResponseDto(item.getProduct().getId(), item.getProduct().getName(), item.getQuantity(),
                 item.getPrice(), item.calculateSubtotal())).toList();
