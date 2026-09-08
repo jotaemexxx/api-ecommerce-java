@@ -37,6 +37,7 @@ public class CartService {
 
     }
 
+    @Transactional(readOnly = true)
     public CartResponseDto getCartResponseByUserId(Long userId) {
         Cart cart = cartRepository.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("carrinho nao encontrado"));
 
@@ -85,6 +86,7 @@ public class CartService {
         cartItemRepository.delete(cartItem);
     }
 
+    @Transactional
     public CartItem updateItemQuantity(Long userId, Long productId, Integer quantity) {
         if (!userRepository.existsById(userId)) {
             throw new ResourceNotFoundException("Usuario nao encontrado");

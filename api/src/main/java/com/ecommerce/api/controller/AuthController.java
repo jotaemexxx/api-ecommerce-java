@@ -6,6 +6,9 @@ import com.ecommerce.api.exception.UsernameNotFoundException;
 import com.ecommerce.api.model.User;
 import com.ecommerce.api.repository.UserRepository;
 import com.ecommerce.api.security.JwtService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +32,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> loginRequest(@RequestBody LoginRequestDto request){
+    public ResponseEntity<LoginResponseDto> loginRequest(@RequestBody @Valid LoginRequestDto request){
         User user = userRepository.findUserByEmail(request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("email nao cadastrado"));
 
         String token;
