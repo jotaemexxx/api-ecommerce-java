@@ -3,7 +3,6 @@ package com.ecommerce.api.service;
 import com.ecommerce.api.exception.*;
 import com.ecommerce.api.model.*;
 import com.ecommerce.api.repository.*;
-import com.ecommerce.api.security.UserPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
