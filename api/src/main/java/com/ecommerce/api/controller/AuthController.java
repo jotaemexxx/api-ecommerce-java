@@ -33,7 +33,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> loginRequest(@RequestBody @Valid LoginRequestDto request){
-        User user = userRepository.findUserByEmail(request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("email nao cadastrado"));
+        User user = userRepository.findUserByEmail(request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("credenciais inválidas"));
 
         String token;
 
@@ -42,7 +42,7 @@ public class AuthController {
         }
         else
         {
-            throw new UsernameNotFoundException("credenciais invalidas");
+            throw new UsernameNotFoundException("credenciais inválidas");
         }
 
         LoginResponseDto response = new LoginResponseDto(token, user.getEmail());
