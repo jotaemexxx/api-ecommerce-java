@@ -2,6 +2,7 @@ package com.ecommerce.api.factory;
 
 import com.ecommerce.api.model.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +21,11 @@ public final class OrderFactory {
         order.setOrderDate(LocalDateTime.now());
         order.setOrderStatus(Order.OrderStatus.PENDING);
         order.setOrderItems(new ArrayList<>());
-        order.setTotal(0.0);
+        order.setTotal(BigDecimal.ZERO);
         return order;
     }
 
-    public static Order createOrder(User user, List<OrderItem> orderItems, Double total, Order.OrderStatus status) {
+    public static Order createOrder(User user, List<OrderItem> orderItems, BigDecimal total, Order.OrderStatus status) {
         Order order = new Order();
         order.setId(1L);
         order.setUser(user);

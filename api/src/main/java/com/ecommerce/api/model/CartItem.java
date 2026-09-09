@@ -3,6 +3,8 @@ package com.ecommerce.api.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "cartItens")
 public class CartItem {
@@ -23,8 +25,8 @@ public class CartItem {
     @Positive
     private Integer quantity;
 
-    @Column(nullable = false)
-    private Double price;
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal price;
 
 
     public CartItem() {
@@ -70,11 +72,11 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public Double calculateSubtotal(){
-        return price * quantity;
+    public BigDecimal calculateSubtotal(){
+        return price.multiply(BigDecimal.valueOf(quantity));
     }
 }

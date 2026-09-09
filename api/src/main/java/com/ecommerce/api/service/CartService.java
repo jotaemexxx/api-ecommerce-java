@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import com.ecommerce.api.model.User;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +46,10 @@ public class CartService {
         List<CartItemResponseDto> cartItems = cart.getItensCart().stream().map(item -> new CartItemResponseDto(item.getProduct().getId(), item.getProduct().getName(), item.getQuantity(),
                 item.getPrice(), item.calculateSubtotal())).toList();
 
-        Double total = cartItems.stream().mapToDouble(CartItemResponseDto::getSubtotal).sum();
+        BigDecimal total = cartItems.stream()
+                .map(CartItemResponseDto::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
 
         return new CartResponseDto(cart.getId(), cart.getUser().getId(), cartItems, total);
     }

@@ -1,10 +1,12 @@
 package com.ecommerce.api.dto;
 
+import java.math.BigDecimal;
+
 public class ProductResponseDto {
 
     private Long id;
     private String name;
-    private Double price;
+    private BigDecimal price;
     private Integer stockQuantity;
 
 
@@ -13,7 +15,7 @@ public class ProductResponseDto {
     }
 
 
-    public ProductResponseDto(Long id, String name, Double price, Integer stockQuantity) {
+    public ProductResponseDto(Long id, String name, BigDecimal price, Integer stockQuantity) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -36,11 +38,11 @@ public class ProductResponseDto {
         this.name = name;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

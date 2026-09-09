@@ -1,5 +1,6 @@
 package com.ecommerce.api.dto;
 
+import java.math.BigDecimal;
 
 
 public class CartItemResponseDto {
@@ -7,12 +8,12 @@ public class CartItemResponseDto {
     private Long productId;
     private String productName;
     private Integer quantity;
-    private Double unitPrice;
-    private Double subtotal;
+    private BigDecimal unitPrice;
+    private BigDecimal subtotal;
 
     public CartItemResponseDto() {}
 
-    public CartItemResponseDto(Long productId, String productName, Integer quantity, Double unitPrice, Double subtotal) {
+    public CartItemResponseDto(Long productId, String productName, Integer quantity, BigDecimal unitPrice, BigDecimal subtotal) {
         this.productId = productId;
         this.productName = productName;
         this.quantity = quantity;
@@ -45,20 +46,20 @@ public class CartItemResponseDto {
         this.quantity = quantity;
     }
 
-    public Double getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(Double unitPrice) {
+    public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 
 
-    public Double getSubtotal() {
+    public BigDecimal getSubtotal() {
         return subtotal;
     }
 
-    public void setSubtotal(Double subtotal) {
+    public void setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
     }
 

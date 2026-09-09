@@ -6,6 +6,8 @@ import com.ecommerce.api.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,8 +99,9 @@ public class OrderService {
 
         order.setTotal(
                 orderItems.stream()
-                        .mapToDouble(OrderItem::calculateSubtotal)
-                        .sum()
+                        .map(OrderItem::calculateSubtotal)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+                        .setScale(2, RoundingMode.HALF_UP)
         );
 
         order.setOrderStatus(Order.OrderStatus.PENDING);

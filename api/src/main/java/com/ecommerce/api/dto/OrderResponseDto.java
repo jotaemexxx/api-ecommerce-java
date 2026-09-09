@@ -3,6 +3,7 @@ package com.ecommerce.api.dto;
 
 import com.ecommerce.api.model.Order;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,13 +12,13 @@ public class OrderResponseDto {
     private Long userId;
     private Long orderId;
     private List<OrderItemResponseDto> orderItems;
-    private Double total;
+    private BigDecimal total;
     private LocalDateTime orderDate;
     private Order.OrderStatus orderStatus;
 
     public OrderResponseDto() {}
 
-    public OrderResponseDto(Long userId, Long orderId, List<OrderItemResponseDto> orderItems, Double total, LocalDateTime orderDate, Order.OrderStatus orderStatus) {
+    public OrderResponseDto(Long userId, Long orderId, List<OrderItemResponseDto> orderItems, BigDecimal total, LocalDateTime orderDate, Order.OrderStatus orderStatus) {
         this.userId = userId;
         this.orderId = orderId;
         this.orderItems = orderItems;
@@ -50,11 +51,11 @@ public class OrderResponseDto {
         this.orderItems = orderItems;
     }
 
-    public Double getTotal() {
+    public BigDecimal getTotal() {
         return total;
     }
 
-    public void setTotal(Double total) {
+    public void setTotal(BigDecimal total) {
         this.total = total;
     }
 

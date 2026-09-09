@@ -3,6 +3,7 @@ package com.ecommerce.api.service;
 import com.ecommerce.api.exception.ResourceNotFoundException;
 import com.ecommerce.api.model.Product;
 import com.ecommerce.api.repository.ProductRepository;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,8 +28,8 @@ class ProductServiceTest {
     @Test
     void deveRetornarListadeProdutos() {
 
-        Product product1 = new Product("teclado", 235.5, 10);
-        Product product2 = new Product("mouse vxe", 55.78, 36);
+        Product product1 = new Product("teclado", new BigDecimal("235.50"), 10);
+        Product product2 = new Product("mouse vxe", new BigDecimal("55.78"), 36);
         when(productRepository.findAll()).thenReturn(List.of(product1, product2));
 
         List<Product> resultado = productService.getAllProducts();
@@ -38,7 +39,7 @@ class ProductServiceTest {
 
     @Test
     void deveRetornarProdutoIdExiste(){
-        Product product1 = new Product("teste", 25.67, 34);
+        Product product1 = new Product("teste", new BigDecimal("25.67"), 34);
         product1.setId(1L);
         when(productRepository.findById(1L)).thenReturn(Optional.of(product1));
 
@@ -57,8 +58,8 @@ class ProductServiceTest {
 
     @Test
     void deveSalvarProduto(){
-        Product enterProduct = new Product("espatula", 445.5, 23);
-        Product outProduct = new Product("espatula", 445.5, 23);
+        Product enterProduct = new Product("espatula", new BigDecimal("445.50"), 23);
+        Product outProduct = new Product("espatula", new BigDecimal("445.50"), 23);
         outProduct.setId(1L);
 
         when(productRepository.save(enterProduct)).thenReturn(outProduct);
@@ -70,9 +71,9 @@ class ProductServiceTest {
 
     @Test
     void deveAtualizarProduto(){
-        Product beforeProduct = new Product("nome", 34.2, 12);
-        Product updateProduct =new Product("nomeAtualizado", 34.2, 12);
-        Product savedProduct = new Product("nomeAtualizado", 34.2, 12);
+        Product beforeProduct = new Product("nome", new BigDecimal("34.20"), 12);
+        Product updateProduct =new Product("nomeAtualizado", new BigDecimal("34.20"), 12);
+        Product savedProduct = new Product("nomeAtualizado", new BigDecimal("34.20"), 12);
         beforeProduct.setId(1L);
         savedProduct.setId(1l);
 

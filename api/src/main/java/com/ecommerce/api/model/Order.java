@@ -2,6 +2,7 @@ package com.ecommerce.api.model;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,7 +20,8 @@ public class Order {
 
     private LocalDateTime orderDate;
 
-    private Double total;
+    @Column(precision = 12, scale = 2)
+    private BigDecimal total;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
@@ -35,7 +37,7 @@ public class Order {
 
     public Order() {}
 
-    public Order(User user, LocalDateTime orderDate, Double total, OrderStatus orderStatus, List<OrderItem> orderItems) {
+    public Order(User user, LocalDateTime orderDate, BigDecimal total, OrderStatus orderStatus, List<OrderItem> orderItems) {
         this.user = user;
         this.orderDate = orderDate;
         this.total = total;
@@ -67,11 +69,11 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    public Double getTotal() {
+    public BigDecimal getTotal() {
         return total;
     }
 
-    public void setTotal(Double total) {
+    public void setTotal(BigDecimal total) {
         this.total = total;
     }
 

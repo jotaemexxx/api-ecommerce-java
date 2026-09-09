@@ -1,16 +1,17 @@
 package com.ecommerce.api.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class CartResponseDto {
     private Long cartId;
     private Long userId;
     private List<CartItemResponseDto> cartItems;
-    private Double total;
+    private BigDecimal total;
 
     public CartResponseDto(){}
 
-    public CartResponseDto(Long cartId, Long userId, List<CartItemResponseDto> cartItems, Double total) {
+    public CartResponseDto(Long cartId, Long userId, List<CartItemResponseDto> cartItems, BigDecimal total) {
         this.cartId = cartId;
         this.userId = userId;
         this.cartItems = cartItems;
@@ -42,11 +43,11 @@ public class CartResponseDto {
         this.cartItems = cartItems;
     }
 
-    public Double getTotal() {
+    public BigDecimal getTotal() {
         return total;
     }
 
-    public void setTotal(Double total) {
+    public void setTotal(BigDecimal total) {
         this.total = total;
     }
 }
