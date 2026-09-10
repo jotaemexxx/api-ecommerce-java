@@ -2,6 +2,8 @@ package com.ecommerce.api.model;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "orderItems")
 public class OrderItem {
@@ -20,13 +22,14 @@ public class OrderItem {
 
     private String productName;
 
-    private Double price;
+    @Column(precision = 12, scale = 2)
+    private BigDecimal price;
 
     private Integer quantity;
 
     public OrderItem() {}
 
-    public OrderItem(Order order, Product product, String productName, Double price, Integer quantity) {
+    public OrderItem(Order order, Product product, String productName, BigDecimal price, Integer quantity) {
         this.order = order;
         this.product = product;
         this.productName = productName;
@@ -66,11 +69,11 @@ public class OrderItem {
         this.productName = productName;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -82,6 +85,6 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    public Double calculateSubtotal() { return price * quantity;}
+    public BigDecimal calculateSubtotal() { return price.multiply(BigDecimal.valueOf(quantity));}
 
 }

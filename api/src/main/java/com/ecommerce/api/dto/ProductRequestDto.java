@@ -1,8 +1,11 @@
 package com.ecommerce.api.dto;
 
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+
+import java.math.BigDecimal;
 
 
 public class ProductRequestDto
@@ -12,7 +15,8 @@ public class ProductRequestDto
 
     @NotNull(message = "o preço é obrigatório")
     @Positive(message = "o preço deve ser maior que zero")
-    private Double price;
+    @Digits(integer = 10, fraction = 2, message = "o preço deve ter no máximo 2 casas decimais")
+    private BigDecimal price;
 
     @NotNull(message = "a quantidade em estoque é obrigatória")
     @Positive(message = "a quantidade em estoque deve ser positiva")
@@ -28,11 +32,11 @@ public class ProductRequestDto
         this.name =  name;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
