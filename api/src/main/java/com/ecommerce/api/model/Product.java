@@ -20,6 +20,9 @@ public class Product {
     @Column(nullable = false)
     private Integer stockQuantity;
 
+    @Version
+    private Long version;
+
     public Product()
     {
 
