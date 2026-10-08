@@ -1,0 +1,23 @@
+# Blueprint do Render (https://render.com) para subir a API em dev/hmg.
+# Ao conectar este repositorio no Render como "Blueprint", ele le este arquivo
+# e cria o Web Service automaticamente. As variaveis marcadas com sync:false
+# devem ser preenchidas por voce no painel (sao segredos, nao ficam no repo).
+services:
+  - type: web
+    name: ecommerce-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: virginia            # regiao mais proxima do Brasil no free tier; ajuste se quiser
+    healthCheckPath: /api/products   # endpoint publico (GET) -> 200 quando a app esta no ar
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: supabase
+      - key: JWT_SECRET
+        generateValue: true     # o Render gera um segredo forte automaticamente
+      - key: DB_USERNAME
+        sync: false             # usuario do Supabase (ex.: postgres.<ref-do-projeto>)
+      - key: DB_PASSWORD
+        sync: false             # senha do banco no Supabase
+      - key: APP_CORS_ALLOWED_ORIGINS
+        sync: false             # origem(ns) do frontend, ex.: https://meu-front.vercel.app
