@@ -1,0 +1,13 @@
+# Artefatos de build (serao gerados dentro do container)
+api/target/
+
+# Metadados de versionamento e IDE
+.git/
+.idea/
+.vscode/
+
+# Segredos locais
+.env
+
+# Caso um frontend venha a coexistir no repo no futuro
+node_modules/
